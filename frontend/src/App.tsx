@@ -7,7 +7,7 @@ function App() {
 
   const handleCrunkerConcat = () => {
     crunker
-      .fetchAudio("../sounds/e.wav", "../sounds/b.wav")
+      .fetchAudio("../../sounds/e.wav", "../../sounds/b.wav")
       .then((buffers) => {
         // => [AudioBuffer, AudioBuffer]
         return crunker.concatAudio(buffers);
@@ -36,7 +36,7 @@ function App() {
   
   const handleCrunkerMerge = () => {
     crunker
-      .fetchAudio("../sounds/e.wav", "../sounds/b.wav")
+      .fetchAudio("../../sounds/e.wav", "../../sounds/b.wav")
       .then((buffers) => {
         // => [AudioBuffer, AudioBuffer]
         return crunker.mergeAudio(buffers);

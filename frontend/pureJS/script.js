@@ -1,6 +1,6 @@
-const audioFile = new Audio("../sounds/e.wav");
+const audioFile = new Audio("../../sounds/e.wav");
 
-const soundD = new Audio("../sounds/d.wav") 
+const soundD = new Audio("../../sounds/d.wav") 
 
 const playFile = () => {
     audioFile.play()
