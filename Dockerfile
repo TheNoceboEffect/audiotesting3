@@ -30,4 +30,14 @@ COPY 2-build.sh .
 COPY 3-run-private.sh .
 
 # initial default build
-RUN ./2-build.sh
+
+# Convert line endings for Unix compatibility
+RUN sed -i 's/\r$//' /usr/app/2-build.sh /usr/app/3-run-private.sh
+
+# Ensure the script is executable
+RUN chmod +x /usr/app/2-build.sh /usr/app/3-run-private.sh
+
+# Run the build script with debug output
+RUN /bin/bash -x /usr/app/2-build.sh
+
+CMD ["python3", "-m", "http.server", "-d", "/usr/app/scratch-gui/build"]
