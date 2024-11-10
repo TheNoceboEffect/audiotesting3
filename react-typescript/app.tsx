@@ -1,5 +1,6 @@
+// Removed references of all .css files, due to me choosing to use an alert system in my extension, as opposed to opening a completely new page to click a button to play sounds.
+
 import Crunker from "crunker";
-import "./App.css";
 
 function App() {
   
@@ -60,6 +61,8 @@ function App() {
     });
   };
 
+  //I am thinking of using alerts instead of buttons. If I use alerts instead of buttons, will I need to remove the 'return' function, or replace it with other code entirely?
+  
   return (
     <>
       <button onClick={handleCrunkerMerge}>crunker merge example</button>
