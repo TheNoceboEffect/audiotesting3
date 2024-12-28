@@ -1,4 +1,3 @@
-<script src="http://unpkg.com/tone"></script>
 const BlockType = require('../../extension-support/block-type');
 const ArgumentType = require('../../extension-support/argument-type');
 const TargetType = require('../../extension-support/target-type');
@@ -6,7 +5,10 @@ const TargetType = require('../../extension-support/target-type');
 class Scratch3YourExtension {
 
     constructor (runtime) {
-        this.runtime = runtime;
+        import('tone')
+          .then((toneModule) => {
+            this.tone = toneModule.tone;
+          });
       }
 
     /**
