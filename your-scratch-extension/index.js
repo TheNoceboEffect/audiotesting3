@@ -1,4 +1,4 @@
-import * as Tone from "tone";
+<script src="http://unpkg.com/tone"></script>
 const BlockType = require('../../extension-support/block-type');
 const ArgumentType = require('../../extension-support/argument-type');
 const TargetType = require('../../extension-support/target-type');
