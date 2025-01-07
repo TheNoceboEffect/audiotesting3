@@ -1,6 +1,6 @@
 const Tone = require('tone'); // Import Tone.js for sound synthesis
-let audioURL = 'https://thenoceboeffect.github.io/sounds/a.ogg'; // This will store the loaded URL
 let player;
+let url = 'https://thenoceboeffect.github.io/sounds/a.ogg'
 const BlockType = require('../../extension-support/block-type');
 const ArgumentType = require('../../extension-support/argument-type');
 const TargetType = require('../../extension-support/target-type');
@@ -8,8 +8,18 @@ const TargetType = require('../../extension-support/target-type');
 class Scratch3YourExtension {
 
     constructor (runtime) {
-      this.synth = new Tone.Synth().toDestination(); // Setup Tone.js synth
+      this.runtime = runtime;
+      this.player = new Tone.Player().toDestination();
     }
+
+//Define Helper Methods
+playSound({ url }) {
+    this.player.load(url).then(() => {
+      this.player.start();
+    }).catch(error => {
+      console.error('Error loading sound:', error);
+    });
+}
 
     /**
      * Returns the metadata about your extension.
@@ -33,11 +43,11 @@ class Scratch3YourExtension {
             // your Scratch blocks
             blocks: [
               {
-                  opcode: 'loadSound',
+                  opcode: 'playSound',
                   blockType: Scratch.BlockType.COMMAND,
-                  text: 'load sound from [URL]',
+                  text: 'load sound from [url]',
                   arguments: {
-                      URL: {
+                      url: {
                           type: Scratch.ArgumentType.STRING,
                           defaultValue: 'https://thenoceboeffect.github.io/sounds/a.ogg'
                       }
@@ -53,44 +63,23 @@ class Scratch3YourExtension {
                           defaultValue: 1.0
                       }
                   }
-              },
-              {
-                  opcode: 'playSound',
-                  blockType: Scratch.BlockType.COMMAND,
-                  text: 'play sound'
               }
            ],
            menus: {},
 
-           loadSound({ URL }) {
+           playSound({ URL }) {
               loadSound(URL);
            },
            setPitch({ RATE }) {
               setPitch(RATE);
            },
-           playSound() {
-              playSound();
-           }
-        };
+        }
       }
-
-loadSound({url}) {
-audioURL = url; // Store the URL in the variable
-  player = new Tone.Player(audioURL).toDestination();
-  player.autostart = false;
 }
 
-setPitch({rate}) {
+setPitch({ rate });
    if (player) {
        player.playbackRate = rate; // Example: 1.0 is normal, 2.0 doubles pitch, 0.5 halves it
-      }
-  }
-
-
-playSound () {
-   if (player) {
-       player.start();
     }
-}
 
 module.exports = Scratch3YourExtension; // Export the extension for unsandboxed usage
