@@ -10,6 +10,9 @@ class Scratch3YourExtension {
 
     constructor(runtime) {
         this.runtime = runtime;
+        this.pitchShift = new Tone.PitchShift({
+            pitch: 0, // Default pitch (0 semitones)
+        }).toDestination();
     }
 
     /**
