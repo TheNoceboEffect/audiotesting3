@@ -61,6 +61,11 @@ class Scratch3YourExtension {
                         }
                     }
                 },
+                {
+                    opcode: 'stopSound',
+                    blockType: BlockType.COMMAND,
+                    text: 'stop sound',
+                }
 
             ],
             menus: {},
@@ -71,9 +76,11 @@ class Scratch3YourExtension {
 
     async playSound({ url }) {
         try {
-            await Tone.loaded(); // Wait for Tone.js to be fully loaded
-            await this.player.load(url); // Wait for the player to load the URL
+            await Tone.loaded(); // Ensure Tone.js is ready    
             this.player.start(); // Start playback
+            this.player.onstop = () => {
+                this.player.dispose(); // Clean up after playback
+            };
         } catch (err) {
             console.error('Error loading or playing sound:', err);
         }
@@ -82,6 +89,12 @@ class Scratch3YourExtension {
     setPitch({ RATE }) {
         this.pitchShift.pitch = RATE
 
+    }
+
+    stopSound() {
+        if (this.player && this.player.state === 'started') {
+            this.player.stop(); // Stop playback
+        }
     }
 
 }
