@@ -1,4 +1,3 @@
-const Tone = require('tone'); // Import Tone.js for sound synthesis
 let player;
 let url = 'https://thenoceboeffect.github.io/sounds/a.ogg'
 const BlockType = require('../../extension-support/block-type');
@@ -9,8 +8,9 @@ class Scratch3YourExtension {
 
     constructor(runtime) {
         this.runtime = runtime;
-        this.pitchShift = new Tone.PitchShift({ pitch: 0 }).toDestination()
-        this.player = new Tone.Player().connect(pitchShift);
+        import('tone').then((toneModule) => this.tone = toneModule.tone) 
+        this.pitchShift = this.tone.PitchShift({ pitch: 0 }).toDestination()
+        this.player = this.tone.Player().connect(pitchShift);
     }
 
     /**
