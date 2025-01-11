@@ -33,28 +33,30 @@ class Scratch3YourExtension {
 
             // your Scratch blocks
             blocks: [
-                {
-                    opcode: 'playSound',
-                    blockType: BlockType.COMMAND,
-                    text: 'load sound from [url]',
-                    arguments: {
-                        url: {
-                            type: ArgumentType.STRING,
-                            defaultValue: 'https://thenoceboeffect.github.io/sounds/a.ogg'
-                        }
-                    }
-                },
-                {
-                    opcode: 'setPitch',
-                    blockType: BlockType.COMMAND,
-                    text: 'set pitch rate to [RATE]',
-                    arguments: {
-                        RATE: {
-                            type: ArgumentType.NUMBER,
-                            defaultValue: 1.0
-                        }
-                    }
-                },
+                // {
+                //     opcode: 'playSound',
+                //     blockType: BlockType.COMMAND,
+                //     text: 'load sound from [url]',
+                //     filter: [ TargetType.SPRITE, TargetType.STAGE ],
+                //     arguments: {
+                //         url: {
+                //             type: ArgumentType.STRING,
+                //             defaultValue: 'https://thenoceboeffect.github.io/sounds/a.ogg'
+                //         }
+                //     }
+                // },
+                // {
+                //     opcode: 'setPitch',
+                //     blockType: BlockType.COMMAND,
+                //     text: 'set pitch rate to [RATE]',
+                //     filter: [ TargetType.SPRITE, TargetType.STAGE ],
+                //     arguments: {
+                //         RATE: {
+                //             type: ArgumentType.NUMBER,
+                //             defaultValue: 1.0
+                //         }
+                //     }
+                // },
                 {
                     // name of the function where your block code lives
                     opcode: 'myFirstBlock',
@@ -115,13 +117,13 @@ class Scratch3YourExtension {
         }
     }
 
-    playSound({ url }) {
-        this.player.load(url).then(() => {
-            this.player.start();
-        }).catch(error => {
-            console.error('Error loading sound:', error);
-        });
-    }
+    // playSound({ url }) {
+    //     this.player.load(url).then(() => {
+    //         this.player.start();
+    //     }).catch(error => {
+    //         console.error('Error loading sound:', error);
+    //     });
+    // }
 
     myFirstBlock ({ MY_NUMBER, MY_STRING }) {
         // example implementation to return a string
