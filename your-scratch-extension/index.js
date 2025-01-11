@@ -9,7 +9,8 @@ class Scratch3YourExtension {
 
     constructor(runtime) {
         this.runtime = runtime;
-        this.player = new Tone.Player();
+        this.pitchShift = new Tone.PitchShift({ pitch: 0 }).toDestination()
+        this.player = new Tone.Player().connect(pitchShift);
     }
 
     /**
@@ -33,83 +34,31 @@ class Scratch3YourExtension {
 
             // your Scratch blocks
             blocks: [
-                // {
-                //     opcode: 'playSound',
-                //     blockType: BlockType.COMMAND,
-                //     text: 'load sound from [url]',
-                //     filter: [ TargetType.SPRITE, TargetType.STAGE ],
-                //     arguments: {
-                //         url: {
-                //             type: ArgumentType.STRING,
-                //             defaultValue: 'https://thenoceboeffect.github.io/sounds/a.ogg'
-                //         }
-                //     }
-                // },
-                // {
-                //     opcode: 'setPitch',
-                //     blockType: BlockType.COMMAND,
-                //     text: 'set pitch rate to [RATE]',
-                //     filter: [ TargetType.SPRITE, TargetType.STAGE ],
-                //     arguments: {
-                //         RATE: {
-                //             type: ArgumentType.NUMBER,
-                //             defaultValue: 1.0
-                //         }
-                //     }
-                // },
                 {
-                    // name of the function where your block code lives
-                    opcode: 'myFirstBlock',
-
-                    // type of block - choose from:
-                    //   BlockType.REPORTER - returns a value, like "direction"
-                    //   BlockType.BOOLEAN - same as REPORTER but returns a true/false value
-                    //   BlockType.COMMAND - a normal command block, like "move {} steps"
-                    //   BlockType.HAT - starts a stack if its value changes from false to true ("edge triggered")
-                    blockType: BlockType.REPORTER,
-
-                    // label to display on the block
-                    text: 'My first block [MY_NUMBER] and [MY_STRING]',
-
-                    // true if this block should end a stack
-                    terminal: false,
-
-                    // where this block should be available for code - choose from:
-                    //   TargetType.SPRITE - for code in sprites
-                    //   TargetType.STAGE  - for code on the stage / backdrop
-                    // remove one of these if this block doesn't apply to both
-                    filter: [ TargetType.SPRITE, TargetType.STAGE ],
-
-                    // arguments used in the block
+                    opcode: 'playSound',
+                    blockType: BlockType.COMMAND,
+                    text: 'load sound from [url]',
+                    filter: [TargetType.SPRITE, TargetType.STAGE],
                     arguments: {
-                        MY_NUMBER: {
-                            // default value before the user sets something
-                            defaultValue: 123,
-
-                            // type/shape of the parameter - choose from:
-                            //     ArgumentType.ANGLE - numeric value with an angle picker
-                            //     ArgumentType.BOOLEAN - true/false value
-                            //     ArgumentType.COLOR - numeric value with a colour picker
-                            //     ArgumentType.NUMBER - numeric value
-                            //     ArgumentType.STRING - text value
-                            //     ArgumentType.NOTE - midi music value with a piano picker
-                            type: ArgumentType.NUMBER
-                        },
-                        MY_STRING: {
-                            // default value before the user sets something
-                            defaultValue: 'hello',
-
-                            // type/shape of the parameter - choose from:
-                            //     ArgumentType.ANGLE - numeric value with an angle picker
-                            //     ArgumentType.BOOLEAN - true/false value
-                            //     ArgumentType.COLOR - numeric value with a colour picker
-                            //     ArgumentType.NUMBER - numeric value
-                            //     ArgumentType.STRING - text value
-                            //     ArgumentType.NOTE - midi music value with a piano picker
-                            type: ArgumentType.STRING
+                        url: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'https://thenoceboeffect.github.io/sounds/a.ogg'
                         }
                     }
-                }
+                },
+                {
+                    opcode: 'setPitch',
+                    blockType: BlockType.COMMAND,
+                    text: 'set pitch rate to [RATE]',
+                    filter: [TargetType.SPRITE, TargetType.STAGE],
+                    arguments: {
+                        RATE: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 1.0
+                        }
+                    }
+                },
+
             ],
             menus: {},
 
@@ -117,17 +66,19 @@ class Scratch3YourExtension {
         }
     }
 
-    // playSound({ url }) {
-    //     this.player.load(url).then(() => {
-    //         this.player.start();
-    //     }).catch(error => {
-    //         console.error('Error loading sound:', error);
-    //     });
-    // }
+    async playSound({ url }) {
+        try {
+            await this.player.load(url); // Wait for the player to load the URL
+            await Tone.loaded(); // Wait for Tone.js to be fully loaded
+            this.player.start(); // Start playback
+        } catch (err) {
+            console.error('Error loading or playing sound:', err);
+        }
+    }
 
-    myFirstBlock ({ MY_NUMBER, MY_STRING }) {
-        // example implementation to return a string
-        return MY_STRING + ' : doubled would be ' + (MY_NUMBER * 2);
+    setPitch({ RATE }) {
+        this.pitchShift.pitch = RATE
+
     }
 
 }
