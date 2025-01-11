@@ -10,18 +10,14 @@ class Scratch3YourExtension {
 
     constructor(runtime) {
         this.runtime = runtime;
-        this.pitchShift = new Tone.PitchShift({
-            pitch: 0, // Default pitch (0 semitones)
-        }).toDestination();
-        this.player = new Tone.Player({
-            loop: true,
-        }).connect(this.pitchShift);
     }
 
     /**
      * Returns the metadata about your extension.
      */
     getInfo() {
+        console.log('Extension loaded');
+
         return {
             // unique ID for your extension
             id: 'yourScratchExtension',
@@ -42,30 +38,30 @@ class Scratch3YourExtension {
                 {
                     opcode: 'playSound',
                     blockType: BlockType.COMMAND,
-                    text: 'load sound from [url]',
+                    text: 'play sound from [URL]',
                     arguments: {
-                        url: {
+                        URL: {
                             type: ArgumentType.STRING,
                             defaultValue: 'https://thenoceboeffect.github.io/sounds/a.ogg'
                         }
                     }
-                },
-                {
-                    opcode: 'setPitch',
-                    blockType: BlockType.COMMAND,
-                    text: 'set pitch rate to [RATE]',
-                    arguments: {
-                        RATE: {
-                            type: ArgumentType.NUMBER,
-                            defaultValue: 1.0
-                        }
-                    }
-                },
-                {
-                    opcode: 'stopSound',
-                    blockType: BlockType.COMMAND,
-                    text: 'stop sound',
                 }
+                // {
+                //     opcode: 'setPitch',
+                //     blockType: BlockType.COMMAND,
+                //     text: 'set pitch rate to [RATE]',
+                //     arguments: {
+                //         RATE: {
+                //             type: ArgumentType.NUMBER,
+                //             defaultValue: 1.0
+                //         }
+                //     }
+                // },
+                // {
+                //     opcode: 'stopSound',
+                //     blockType: BlockType.COMMAND,
+                //     text: 'stop sound',
+                // }
 
             ],
             menus: {},
@@ -74,17 +70,25 @@ class Scratch3YourExtension {
         }
     }
 
-    async playSound({ url }) {
+    async playSound({ URL }) {
+        console.log(`Playing sound from URL: ${URL}`);
+
         try {
-            await Tone.loaded(); // Ensure Tone.js is ready    
-            this.player.start(); // Start playback
-            this.player.onstop = () => {
-                this.player.dispose(); // Clean up after playback
+            await Tone.loaded(); // Ensure Tone.js is ready
+            const player = new Tone.Player({
+                url: URL,
+                loop: true, // Enable looping
+            }).connect(this.pitchShift); // Connect the player to pitchShift
+    
+            player.start(); // Start playback
+            player.onstop = () => {
+                player.dispose(); // Clean up resources after playback
             };
         } catch (err) {
             console.error('Error loading or playing sound:', err);
         }
     }
+    
 
     setPitch({ RATE }) {
         this.pitchShift.pitch = RATE
