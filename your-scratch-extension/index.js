@@ -1,16 +1,21 @@
-let player;
 let url = 'https://thenoceboeffect.github.io/sounds/a.ogg'
 const BlockType = require('../../extension-support/block-type');
 const ArgumentType = require('../../extension-support/argument-type');
 const TargetType = require('../../extension-support/target-type');
+import * as Tone from 'tone'
+
 
 class Scratch3YourExtension {
 
+
     constructor(runtime) {
         this.runtime = runtime;
-        import('tone').then((toneModule) => this.tone = toneModule.tone) 
-        this.pitchShift = this.tone.PitchShift({ pitch: 0 }).toDestination()
-        this.player = this.tone.Player().connect(pitchShift);
+        this.pitchShift = new Tone.PitchShift({
+            pitch: 0, // Default pitch (0 semitones)
+        }).toDestination();
+        this.player = new Tone.Player({
+            loop: true,
+        }).connect(this.pitchShift);
     }
 
     /**
@@ -38,7 +43,6 @@ class Scratch3YourExtension {
                     opcode: 'playSound',
                     blockType: BlockType.COMMAND,
                     text: 'load sound from [url]',
-                    filter: [TargetType.SPRITE, TargetType.STAGE],
                     arguments: {
                         url: {
                             type: ArgumentType.STRING,
@@ -50,7 +54,6 @@ class Scratch3YourExtension {
                     opcode: 'setPitch',
                     blockType: BlockType.COMMAND,
                     text: 'set pitch rate to [RATE]',
-                    filter: [TargetType.SPRITE, TargetType.STAGE],
                     arguments: {
                         RATE: {
                             type: ArgumentType.NUMBER,
@@ -68,8 +71,8 @@ class Scratch3YourExtension {
 
     async playSound({ url }) {
         try {
-            await this.player.load(url); // Wait for the player to load the URL
             await Tone.loaded(); // Wait for Tone.js to be fully loaded
+            await this.player.load(url); // Wait for the player to load the URL
             this.player.start(); // Start playback
         } catch (err) {
             console.error('Error loading or playing sound:', err);
