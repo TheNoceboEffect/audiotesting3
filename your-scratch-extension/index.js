@@ -35,22 +35,22 @@ class Scratch3YourExtension {
             blocks: [
                 {
                     opcode: 'playSound',
-                    blockType: Scratch.BlockType.COMMAND,
+                    blockType: BlockType.COMMAND,
                     text: 'load sound from [url]',
                     arguments: {
                         url: {
-                            type: Scratch.ArgumentType.STRING,
+                            type: ArgumentType.STRING,
                             defaultValue: 'https://thenoceboeffect.github.io/sounds/a.ogg'
                         }
                     }
                 },
                 {
                     opcode: 'setPitch',
-                    blockType: Scratch.BlockType.COMMAND,
+                    blockType: BlockType.COMMAND,
                     text: 'set pitch rate to [RATE]',
                     arguments: {
                         RATE: {
-                            type: Scratch.ArgumentType.NUMBER,
+                            type: ArgumentType.NUMBER,
                             defaultValue: 1.0
                         }
                     }
