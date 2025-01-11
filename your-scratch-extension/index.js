@@ -2,7 +2,6 @@ let url = 'https://thenoceboeffect.github.io/sounds/a.ogg'
 const BlockType = require('../../extension-support/block-type');
 const ArgumentType = require('../../extension-support/argument-type');
 const TargetType = require('../../extension-support/target-type');
-import * as Tone from 'tone'
 
 
 class Scratch3YourExtension {
@@ -10,9 +9,6 @@ class Scratch3YourExtension {
 
     constructor(runtime) {
         this.runtime = runtime;
-        this.pitchShift = new Tone.PitchShift({
-            pitch: 0, // Default pitch (0 semitones)
-        }).toDestination();
     }
 
     /**
@@ -38,34 +34,60 @@ class Scratch3YourExtension {
 
             // your Scratch blocks
             blocks: [
+
                 {
-                    opcode: 'playSound',
-                    blockType: BlockType.COMMAND,
-                    text: 'play sound from [URL]',
+                    // name of the function where your block code lives
+                    opcode: 'myFirstBlock',
+
+                    // type of block - choose from:
+                    //   BlockType.REPORTER - returns a value, like "direction"
+                    //   BlockType.BOOLEAN - same as REPORTER but returns a true/false value
+                    //   BlockType.COMMAND - a normal command block, like "move {} steps"
+                    //   BlockType.HAT - starts a stack if its value changes from false to true ("edge triggered")
+                    blockType: BlockType.REPORTER,
+
+                    // label to display on the block
+                    text: 'My first block [MY_NUMBER] and [MY_STRING]',
+
+                    // true if this block should end a stack
+                    terminal: false,
+
+                    // where this block should be available for code - choose from:
+                    //   TargetType.SPRITE - for code in sprites
+                    //   TargetType.STAGE  - for code on the stage / backdrop
+                    // remove one of these if this block doesn't apply to both
+                    filter: [TargetType.SPRITE, TargetType.STAGE],
+
+                    // arguments used in the block
                     arguments: {
-                        URL: {
-                            type: ArgumentType.STRING,
-                            defaultValue: 'https://thenoceboeffect.github.io/sounds/a.ogg'
+                        MY_NUMBER: {
+                            // default value before the user sets something
+                            defaultValue: 123,
+
+                            // type/shape of the parameter - choose from:
+                            //     ArgumentType.ANGLE - numeric value with an angle picker
+                            //     ArgumentType.BOOLEAN - true/false value
+                            //     ArgumentType.COLOR - numeric value with a colour picker
+                            //     ArgumentType.NUMBER - numeric value
+                            //     ArgumentType.STRING - text value
+                            //     ArgumentType.NOTE - midi music value with a piano picker
+                            type: ArgumentType.NUMBER
+                        },
+                        MY_STRING: {
+                            // default value before the user sets something
+                            defaultValue: 'hello',
+
+                            // type/shape of the parameter - choose from:
+                            //     ArgumentType.ANGLE - numeric value with an angle picker
+                            //     ArgumentType.BOOLEAN - true/false value
+                            //     ArgumentType.COLOR - numeric value with a colour picker
+                            //     ArgumentType.NUMBER - numeric value
+                            //     ArgumentType.STRING - text value
+                            //     ArgumentType.NOTE - midi music value with a piano picker
+                            type: ArgumentType.STRING
                         }
                     }
                 }
-                // {
-                //     opcode: 'setPitch',
-                //     blockType: BlockType.COMMAND,
-                //     text: 'set pitch rate to [RATE]',
-                //     arguments: {
-                //         RATE: {
-                //             type: ArgumentType.NUMBER,
-                //             defaultValue: 1.0
-                //         }
-                //     }
-                // },
-                // {
-                //     opcode: 'stopSound',
-                //     blockType: BlockType.COMMAND,
-                //     text: 'stop sound',
-                // }
-
             ],
             menus: {},
 
@@ -73,35 +95,10 @@ class Scratch3YourExtension {
         }
     }
 
-    async playSound({ URL }) {
-        console.log(`Playing sound from URL: ${URL}`);
 
-        try {
-            await Tone.loaded(); // Ensure Tone.js is ready
-            const player = new Tone.Player({
-                url: URL,
-                loop: true, // Enable looping
-            }).connect(this.pitchShift); // Connect the player to pitchShift
-    
-            player.start(); // Start playback
-            player.onstop = () => {
-                player.dispose(); // Clean up resources after playback
-            };
-        } catch (err) {
-            console.error('Error loading or playing sound:', err);
-        }
-    }
-    
-
-    setPitch({ RATE }) {
-        this.pitchShift.pitch = RATE
-
-    }
-
-    stopSound() {
-        if (this.player && this.player.state === 'started') {
-            this.player.stop(); // Stop playback
-        }
+    myFirstBlock({ MY_NUMBER, MY_STRING }) {
+        // example implementation to return a string
+        return MY_STRING + ' : doubled would be ' + (MY_NUMBER * 2);
     }
 
 }
